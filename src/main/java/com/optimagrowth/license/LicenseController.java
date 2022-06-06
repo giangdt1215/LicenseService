@@ -62,4 +62,16 @@ public class LicenseController {
         return ResponseEntity.ok(licenseService.deleteLicense(licenseId, locale));
     }
 
+    @RequestMapping(value = "/{licenseId}/{clientType}", method = RequestMethod.GET)
+    public License getLicenseWithClient(
+            @PathVariable("organizationId") String organizationId,
+            @PathVariable("licenseId") String licenseId,
+            @PathVariable("clientType") String clientType ){
+        // clientType : Discovery, Rest, Feign
+        // Discovery: Spring Discovery Client lib
+        // Rest: Spring Discovery Client-enabled REST template lib
+        // Feign: Netflix Feign client lib
+        return licenseService.getLicense(licenseId, organizationId, clientType);
+    }
+
 }
