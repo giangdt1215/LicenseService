@@ -71,7 +71,24 @@ public class LicenseController {
         // Discovery: Spring Discovery Client lib
         // Rest: Spring Discovery Client-enabled REST template lib
         // Feign: Netflix Feign client lib
-        return licenseService.getLicense(licenseId, organizationId, clientType);
+        License license = licenseService.getLicense(licenseId, organizationId, clientType);
+
+        //Add link HATEOAS
+        license.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(LicenseController.class)
+                        .getLicense(organizationId, license.getLicenseId()))
+                        .withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(LicenseController.class)
+                        .createLicense(organizationId, license, null))
+                        .withRel("createLicense"),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(LicenseController.class)
+                        .updateLicense(organizationId, license, null))
+                        .withRel("updateLicense"),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(LicenseController.class)
+                        .deleteLicense(organizationId, license.getLicenseId(), null))
+                        .withRel("deleteLicense")
+        );
+
+        return license;
     }
 
 }
