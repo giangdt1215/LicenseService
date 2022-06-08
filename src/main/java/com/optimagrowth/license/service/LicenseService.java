@@ -7,12 +7,17 @@ import com.optimagrowth.license.repository.LicenseRepository;
 import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class LicenseService {
@@ -86,6 +91,27 @@ public class LicenseService {
         }
 
         return organization;
+    }
+
+    private void randomlyRunLong() throws TimeoutException {
+        Random rand = new Random();
+        int randNum = rand.nextInt(3) + 1;
+        if(randNum == 3) sleep();
+    }
+
+    private void sleep() throws TimeoutException {
+        try {
+            Thread.sleep(5000);
+            throw new TimeoutException();
+        } catch (InterruptedException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @CircuitBreaker(name = "licenseService")
+    public List<License> getLicenseByOrganization(String organizationId) throws TimeoutException {
+        randomlyRunLong();
+        return licenseRepository.findByOrganizationId(organizationId);
     }
 
     public License createLicense(License license){
