@@ -18,7 +18,7 @@
         <java.version>11</java.version>
         <docker.image.prefix>ostock</docker.image.prefix>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
-        <resilience4j.version>1.7.1</resilience4j.version>
+<!--        <resilience4j.version>1.7.0</resilience4j.version>-->
     </properties>
 
     <dependencies>
@@ -85,7 +85,7 @@
             <optional>true</optional>
         </dependency>
 
-<!--        &lt;!&ndash;Add resilience4j fault tolerance lib&ndash;&gt;-->
+        <!--Add resilience4j fault tolerance lib-->
 <!--        <dependency>-->
 <!--            <groupId>io.github.resilience4j</groupId>-->
 <!--            <artifactId>resilience4j-spring-boot2</artifactId>-->
@@ -104,11 +104,16 @@
 <!--            <version>${resilience4j.version}</version>-->
 <!--        </dependency>-->
 
-<!--        &lt;!&ndash;Using Spring AOP&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-aop</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+        </dependency>
+
+        <!--Using Spring AOP-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
 
     </dependencies>
 
