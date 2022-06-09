@@ -2,6 +2,8 @@ package com.optimagrowth.license;
 
 import com.optimagrowth.license.model.License;
 import com.optimagrowth.license.service.LicenseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import java.util.concurrent.TimeoutException;
 @RestController
 @RequestMapping(value ="v1/organization/{organizationId}/license")
 public class LicenseController {
+
+    private static final Logger logger = LoggerFactory.getLogger(LicenseController.class);
 
     @Autowired
     private LicenseService licenseService;
@@ -95,6 +99,7 @@ public class LicenseController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<License> getLicenses(@PathVariable("organizationId") String organizationId) throws TimeoutException {
+        logger.info("Test circuit breaker getLicenses");
         return licenseService.getLicenseByOrganization(organizationId);
     }
 }
