@@ -7,6 +7,17 @@ spring:
     config:
       uri: http://localhost:8071
 
+management.endpoints.enabled-by-default: false
+management.endpoint.health:
+  enabled: true
+  show-details: always
+
+logging:
+  level:
+    com.netflix: WARN
+    org.springframework.web: WARN
+    com.optimagrowth: DEBUG
+
 resilience4j:
   circuitbreaker:
     instances:
@@ -21,3 +32,28 @@ resilience4j:
           - java.io.IOException
           - java.util.concurrent.TimeoutException
           - org.springframework.web.client.ResourceAccessException
+  ratelimiter:
+    instances:
+      licenseService:
+        timeoutDuration: 1000ms
+        limitRefreshPeriod: 5000
+        limitForPeriod: 5
+  bulkhead:
+    instances:
+      bulkheadLicenseService:
+        maxWaitDuration: 2ms
+        maxConcurrentCalls: 20
+  thread-pool-bulkhead:
+    instances:
+      bulkheadLicenseService:
+        maxThreadPoolSize: 1
+        coreThreadPoolSize: 1
+        queueCapacity: 1
+        keepAliveDuration: 20ms
+  retry:
+    instances:
+      retryLicenseService:
+        maxRetryAttempts: 5
+        waitDuration: 10000
+        retry-exceptions:
+          - java.util.concurrent.TimeoutException
