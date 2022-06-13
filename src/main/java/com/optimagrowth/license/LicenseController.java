@@ -2,6 +2,7 @@ package com.optimagrowth.license;
 
 import com.optimagrowth.license.model.License;
 import com.optimagrowth.license.service.LicenseService;
+import com.optimagrowth.license.utils.UserContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +101,8 @@ public class LicenseController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<License> getLicenses(@PathVariable("organizationId") String organizationId) throws TimeoutException {
         logger.info("Test circuit breaker getLicenses");
+        logger.debug("LicenseServiceController Correlation id: {}",
+                        UserContextHolder.getContext().getCorrelationId());
         return licenseService.getLicenseByOrganization(organizationId);
     }
 }
