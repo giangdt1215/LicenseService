@@ -1,5 +1,7 @@
 package com.optimagrowth.license.utils;
 
+import org.springframework.util.Assert;
+
 public class UserContextHolder {
 
     private static final ThreadLocal<UserContext> userContext = new ThreadLocal<>();
@@ -16,6 +18,7 @@ public class UserContextHolder {
     }
 
     public static final void setContext(UserContext context){
+        Assert.notNull(context, "Only non-null UserContext instances are permitted");
         userContext.set(context);
     }
 
