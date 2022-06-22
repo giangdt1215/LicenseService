@@ -1,18 +1,66 @@
 version: '3.7'
 
 services:
+  configserver:
+    image: ostock/configserver:0.0.1-SNAPSHOT
+    ports:
+      - "8071:8071"
+    environment:
+      ENCRYPT_KEY: "bd5cae3b97d93e385232afd4c0ea92377a193328"
+    networks:
+      backend:
+        aliases:
+          - "configserver"
+  eurekaserver:
+    image: ostock/eurekaserver:0.0.1-SNAPSHOT
+    ports:
+      - "8070:8070"
+    depends_on:
+      configserver:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "eurekaserver"
+  gatewayserver:
+    image: ostock/gatewayserver:0.0.1-SNAPSHOT
+    ports:
+      - "8072:8072"
+    depends_on:
+      configserver:
+        condition: service_started
+      eurekaserver:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "gateway"
   licensingservice:
     image: ostock/licensing-service:0.0.1-SNAPSHOT
     ports:
     - "8080:8080"
-
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
-
+    depends_on:
+      configserver:
+        condition: service_started
     networks:
       backend:
         aliases:
             - "licenseservice"
+  organizationservice:
+    image: ostock/organization-service:0.0.1-SNAPSHOT
+    environment:
+      - "SPRING_PROFILES_ACTIVE=dev"
+    ports:
+      - "8081:8081"
+    depends_on:
+      configserver:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "organizationservice"
 networks:
   backend:
     driver: bridge
