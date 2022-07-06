@@ -46,8 +46,30 @@ public class LicenseServiceApplication {
 
     @StreamListener(Sink.INPUT)
     public void loggerSink(OrganizationChangeModel orgChange){
-        logger.debug("Received an {} event for organization id {}",
-                orgChange.getAction(), orgChange.getOrganizationId());
+        logger.debug("Received a message of type " + orgChange.getType());
+
+        switch(orgChange.getAction()){
+            case "GET":
+                logger.debug("Received a GET event from the organization service for organization id {}",
+                        orgChange.getOrganizationId());
+                break;
+            case "SAVE":
+                logger.debug("Received a SAVE event from the organization service for organization id {}",
+                        orgChange.getOrganizationId());
+                break;
+            case "UPDATE":
+                logger.debug("Received a UPDATE event from the organization service for organization id {}",
+                        orgChange.getOrganizationId());
+                break;
+            case "DELETE":
+                logger.debug("Received a DELETE event from the organization service for organization id {}",
+                        orgChange.getOrganizationId());
+                break;
+            default:
+                logger.error("Received an UNKNOWN event from the organization service of type {}",
+                        orgChange.getType());
+                break;
+        }
     }
 
     public static void main(String[] args) {
