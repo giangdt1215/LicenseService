@@ -1,4 +1,4 @@
-package com.optimagrowth.license;
+package com.optimagrowth.license.controller;
 
 import com.optimagrowth.license.model.License;
 import com.optimagrowth.license.service.LicenseService;
