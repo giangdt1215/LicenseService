@@ -96,7 +96,7 @@ public class LicenseServiceApplication {
     public RestTemplate getRestTemplate(){
         RestTemplate restTemplate = new RestTemplate();
         List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
-        if(interceptors == null){
+        if(interceptors == null || interceptors.size() == 0){
             restTemplate.setInterceptors(Collections.singletonList(new UserContextInterceptor()));
         } else {
             interceptors.add(new UserContextInterceptor());
