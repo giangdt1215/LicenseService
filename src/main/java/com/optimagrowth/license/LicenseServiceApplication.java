@@ -17,12 +17,12 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.messaging.Message;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -30,6 +30,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 @SpringBootApplication
 @RefreshScope
@@ -71,6 +72,13 @@ public class LicenseServiceApplication {
                 break;
         }
     }
+
+//    @Bean
+//    public Consumer<Message<String>> orgChangeBinding(){
+//        return msg -> {
+//             logger.debug(msg.getPayload());
+//        };
+//    }
 
     public static void main(String[] args) {
         SpringApplication.run(LicenseServiceApplication.class, args);
