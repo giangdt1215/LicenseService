@@ -13,16 +13,13 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.messaging.Message;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -30,14 +27,13 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Consumer;
 
 @SpringBootApplication
 @RefreshScope
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableEurekaClient
-@EnableBinding(Sink.class)
+//@EnableBinding(Sink.class)
 public class LicenseServiceApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(LicenseServiceApplication.class);
@@ -45,7 +41,9 @@ public class LicenseServiceApplication {
     @Autowired
     private ServiceConfig serviceConfig;
 
-    @StreamListener(Sink.INPUT)
+    //@StreamListener(Sink.INPUT)
+    @KafkaListener(topics = "orgChangeTopic", groupId = "licenseGroup",
+            containerFactory = "kafkaListenerContainerFactory")
     public void loggerSink(OrganizationChangeModel orgChange){
         logger.debug("Received a message of type " + orgChange.getType());
 
